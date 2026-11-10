@@ -17,5 +17,11 @@ Desktop.ini
 $RECYCLE.BIN/
 .DS_Store
 
+# Uploaded user media
+static/uploads/*
+!static/uploads/.gitkeep
+python-portfolio/static/uploads/*
+!python-portfolio/static/uploads/.gitkeep
+
 # Temporary logs
 *.log

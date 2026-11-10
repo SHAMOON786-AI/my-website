@@ -145,22 +145,86 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ==========================================
-    // 3. Photo Upload & Removal Handlers
+    // 3. Photo Upload, Fullscreen Lightbox & Removal
     // ==========================================
     const avatarContainer = document.getElementById('avatarContainer');
     const avatarFileInput = document.getElementById('avatarFileInput');
     const uploadAvatarBtn = document.getElementById('uploadAvatarBtn');
+    const uploadBtnText = document.getElementById('uploadBtnText');
+    const viewAvatarBtn = document.getElementById('viewAvatarBtn');
+    const hoverViewBtn = document.getElementById('hoverViewBtn');
+    const hoverUploadBtn = document.getElementById('hoverUploadBtn');
+    const hoverUploadText = document.getElementById('hoverUploadText');
     const removeAvatarBtn = document.getElementById('removeAvatarBtn');
     const avatarImage = document.getElementById('avatarImage');
     const avatarPlaceholder = document.getElementById('avatarPlaceholder');
 
+    // Lightbox modal elements
+    const avatarLightboxModal = document.getElementById('avatarLightboxModal');
+    const fullAvatarImage = document.getElementById('fullAvatarImage');
+    const lightboxBackdrop = document.getElementById('lightboxBackdrop');
+    const closeLightboxBtn = document.getElementById('closeLightboxBtn');
+    const closeLightboxTextBtn = document.getElementById('closeLightboxTextBtn');
+    const downloadAvatarBtn = document.getElementById('downloadAvatarBtn');
+    const changePhotoFromModalBtn = document.getElementById('changePhotoFromModalBtn');
+
+    function openAvatarLightbox() {
+        if (!avatarLightboxModal || !avatarImage) return;
+        const currentSrc = avatarImage.src;
+        if (!currentSrc || avatarImage.classList.contains('hidden')) {
+            // No photo yet, prompt user to upload
+            if (avatarFileInput) avatarFileInput.click();
+            return;
+        }
+
+        fullAvatarImage.src = currentSrc;
+        if (downloadAvatarBtn) downloadAvatarBtn.href = currentSrc;
+
+        avatarLightboxModal.classList.remove('hidden');
+        avatarLightboxModal.classList.add('flex');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeAvatarLightbox() {
+        if (!avatarLightboxModal) return;
+        avatarLightboxModal.classList.add('hidden');
+        avatarLightboxModal.classList.remove('flex');
+        document.body.style.overflow = '';
+    }
+
+    if (closeLightboxBtn) closeLightboxBtn.addEventListener('click', closeAvatarLightbox);
+    if (closeLightboxTextBtn) closeLightboxTextBtn.addEventListener('click', closeAvatarLightbox);
+    if (lightboxBackdrop) lightboxBackdrop.addEventListener('click', closeAvatarLightbox);
+
+    if (viewAvatarBtn) {
+        viewAvatarBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            openAvatarLightbox();
+        });
+    }
+
+    if (hoverViewBtn) {
+        hoverViewBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            openAvatarLightbox();
+        });
+    }
+
     if (avatarFileInput) {
-        function triggerFileInput() {
+        function triggerFileInput(e) {
+            if (e) e.stopPropagation();
             avatarFileInput.click();
         }
 
         if (avatarContainer) {
-            avatarContainer.addEventListener('click', triggerFileInput);
+            avatarContainer.addEventListener('click', (e) => {
+                // If user clicks the avatar and photo exists, open fullscreen
+                if (avatarImage && !avatarImage.classList.contains('hidden') && avatarImage.getAttribute('src')) {
+                    openAvatarLightbox();
+                } else {
+                    triggerFileInput(e);
+                }
+            });
 
             // Drag and drop support
             ['dragenter', 'dragover'].forEach(eventName => {
@@ -186,8 +250,13 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
 
-        if (uploadAvatarBtn) {
-            uploadAvatarBtn.addEventListener('click', triggerFileInput);
+        if (uploadAvatarBtn) uploadAvatarBtn.addEventListener('click', triggerFileInput);
+        if (hoverUploadBtn) hoverUploadBtn.addEventListener('click', triggerFileInput);
+        if (changePhotoFromModalBtn) {
+            changePhotoFromModalBtn.addEventListener('click', (e) => {
+                closeAvatarLightbox();
+                triggerFileInput(e);
+            });
         }
 
         avatarFileInput.addEventListener('change', (e) => {
@@ -216,17 +285,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const result = await response.json();
             if (response.ok && result.success) {
-                showToast('Photo uploaded successfully!', 'success');
+                showToast('Photo updated! Click to view in full screen.', 'success');
                 if (avatarImage) {
                     avatarImage.src = result.avatar_url;
                     avatarImage.classList.remove('hidden');
                 }
+                if (fullAvatarImage) {
+                    fullAvatarImage.src = result.avatar_url;
+                }
                 if (avatarPlaceholder) {
                     avatarPlaceholder.classList.add('hidden');
                 }
-                if (removeAvatarBtn) {
-                    removeAvatarBtn.classList.remove('hidden');
-                }
+                if (viewAvatarBtn) viewAvatarBtn.classList.remove('hidden');
+                if (hoverViewBtn) hoverViewBtn.classList.remove('hidden');
+                if (removeAvatarBtn) removeAvatarBtn.classList.remove('hidden');
+                if (uploadBtnText) uploadBtnText.textContent = 'Change Photo';
+                if (hoverUploadText) hoverUploadText.textContent = 'Change';
+                if (downloadAvatarBtn) downloadAvatarBtn.href = result.avatar_url;
             } else {
                 showToast(result.message || 'Failed to upload photo.', 'error');
             }
@@ -246,9 +321,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 const result = await response.json();
                 if (response.ok && result.success) {
                     showToast('Profile photo removed.', 'info');
-                    if (avatarImage) avatarImage.classList.add('hidden');
+                    if (avatarImage) {
+                        avatarImage.src = '';
+                        avatarImage.classList.add('hidden');
+                    }
                     if (avatarPlaceholder) avatarPlaceholder.classList.remove('hidden');
-                    removeAvatarBtn.classList.add('hidden');
+                    if (viewAvatarBtn) viewAvatarBtn.classList.add('hidden');
+                    if (hoverViewBtn) hoverViewBtn.classList.add('hidden');
+                    if (removeAvatarBtn) removeAvatarBtn.classList.add('hidden');
+                    if (uploadBtnText) uploadBtnText.textContent = 'Upload Photo';
+                    if (hoverUploadText) hoverUploadText.textContent = 'Upload';
                 }
             } catch (err) {
                 console.error(err);
@@ -256,6 +338,15 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+
+    // Escape key listener for lightbox
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            if (avatarLightboxModal && !avatarLightboxModal.classList.contains('hidden')) {
+                closeAvatarLightbox();
+            }
+        }
+    });
 
     // ==========================================
     // 4. Mobile Navigation Menu Toggle

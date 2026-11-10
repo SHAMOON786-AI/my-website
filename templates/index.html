@@ -130,39 +130,52 @@
             <!-- Profile Photo Uploader & Display -->
             <div class="flex flex-col items-center mb-6">
                 <!-- Avatar Outer Glow Ring -->
-                <div id="avatarContainer" class="relative w-36 h-36 sm:w-40 sm:h-40 rounded-full p-1 bg-gradient-to-tr from-cyan-500 via-indigo-500 to-purple-600 avatar-glow cursor-pointer group transition-transform duration-300 hover:scale-105" title="Click or Drag & Drop to change photo">
+                <div id="avatarContainer" class="relative w-36 h-36 sm:w-44 sm:h-44 rounded-full p-1.5 bg-gradient-to-tr from-cyan-500 via-indigo-500 to-purple-600 avatar-glow cursor-pointer group transition-all duration-300 hover:scale-105" title="Click to view full screen or upload">
                     
                     <div class="w-full h-full rounded-full overflow-hidden relative bg-slate-900 border-2 border-slate-900">
                         <!-- Uploaded Image -->
-                        <img id="avatarImage" src="{{ profile.avatar_url or '' }}" alt="{{ profile.name }}" class="w-full h-full object-cover {% if not profile.avatar_url %}hidden{% endif %}">
+                        <img id="avatarImage" src="{{ profile.avatar_url or '' }}" alt="{{ profile.name }}" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110 {% if not profile.avatar_url %}hidden{% endif %}">
                         
                         <!-- Initial Fallback Placeholder -->
-                        <div id="avatarPlaceholder" class="w-full h-full flex flex-col items-center justify-center bg-gradient-to-tr from-cyan-950 via-slate-900 to-indigo-950 text-cyan-300 font-extrabold text-2xl tracking-tight {% if profile.avatar_url %}hidden{% endif %}">
+                        <div id="avatarPlaceholder" class="w-full h-full flex flex-col items-center justify-center bg-gradient-to-tr from-cyan-950 via-slate-900 to-indigo-950 text-cyan-300 font-extrabold text-3xl tracking-tight {% if profile.avatar_url %}hidden{% endif %}">
                             <span>MSA</span>
+                            <span class="text-[10px] font-mono text-cyan-400/80 mt-1 uppercase tracking-widest font-normal">Add Photo</span>
                         </div>
 
-                        <!-- Hover Camera Overlay -->
-                        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm opacity-0 group-hover:opacity-100 flex flex-col items-center justify-center text-white transition-opacity duration-200">
-                            <i class="fa-solid fa-camera text-2xl text-cyan-400 mb-1"></i>
-                            <span class="text-[11px] font-mono tracking-tight text-gray-200">Upload Photo</span>
+                        <!-- Hover Action Overlay -->
+                        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm opacity-0 group-hover:opacity-100 flex flex-col items-center justify-center gap-2 text-white transition-opacity duration-200">
+                            <!-- View Fullscreen Pill -->
+                            <button type="button" id="hoverViewBtn" class="px-3 py-1.5 rounded-lg bg-cyan-950/80 hover:bg-cyan-900 border border-cyan-500/50 text-cyan-300 text-xs font-mono flex items-center gap-1.5 transition shadow-lg {% if not profile.avatar_url %}hidden{% endif %}">
+                                <i class="fa-solid fa-expand text-xs"></i>
+                                <span>Full Screen</span>
+                            </button>
+                            <!-- Change / Upload Pill -->
+                            <button type="button" id="hoverUploadBtn" class="px-3 py-1.5 rounded-lg bg-slate-900/90 hover:bg-slate-800 border border-white/20 text-gray-200 text-xs font-mono flex items-center gap-1.5 transition shadow-lg">
+                                <i class="fa-solid fa-camera text-cyan-400 text-xs"></i>
+                                <span id="hoverUploadText">{% if profile.avatar_url %}Change{% else %}Upload{% endif %}</span>
+                            </button>
                         </div>
                     </div>
 
                     <!-- Online Status Dot on Avatar -->
-                    <span class="absolute bottom-2 right-2 w-5 h-5 rounded-full bg-emerald-500 border-2 border-slate-900 shadow-md"></span>
+                    <span class="absolute bottom-2.5 right-2.5 w-5 h-5 rounded-full bg-emerald-500 border-2 border-slate-900 shadow-md"></span>
                 </div>
 
                 <!-- Hidden File Input for Avatar -->
                 <input type="file" id="avatarFileInput" accept="image/png, image/jpeg, image/jpg, image/webp" class="hidden">
 
-                <!-- Photo Actions Buttons -->
-                <div class="mt-3 flex items-center gap-2">
-                    <button type="button" id="uploadAvatarBtn" class="px-3 py-1 rounded-lg text-xs font-mono glass-card hover:border-cyan-500/40 text-cyan-300 flex items-center gap-1.5 transition">
-                        <i class="fa-solid fa-cloud-arrow-up text-xs"></i>
-                        <span>Upload Photo</span>
+                <!-- Photo Actions Buttons Under Avatar -->
+                <div class="mt-3.5 flex items-center gap-2">
+                    <button type="button" id="viewAvatarBtn" class="px-3 py-1.5 rounded-xl text-xs font-mono glass-card hover:border-cyan-500/50 text-cyan-300 flex items-center gap-1.5 transition {% if not profile.avatar_url %}hidden{% endif %}" title="View in Full Screen">
+                        <i class="fa-solid fa-expand text-xs"></i>
+                        <span>Full Screen</span>
                     </button>
-                    <button type="button" id="removeAvatarBtn" class="px-2.5 py-1 rounded-lg text-xs font-mono glass-card hover:border-rose-500/40 text-rose-400 transition {% if not profile.avatar_url %}hidden{% endif %}" title="Remove photo">
-                        <i class="fa-regular fa-trash-can"></i>
+                    <button type="button" id="uploadAvatarBtn" class="px-3 py-1.5 rounded-xl text-xs font-mono glass-card hover:border-cyan-500/40 text-gray-300 hover:text-white flex items-center gap-1.5 transition">
+                        <i class="fa-solid fa-cloud-arrow-up text-cyan-400 text-xs"></i>
+                        <span id="uploadBtnText">{% if profile.avatar_url %}Change Photo{% else %}Upload Photo{% endif %}</span>
+                    </button>
+                    <button type="button" id="removeAvatarBtn" class="px-2.5 py-1.5 rounded-xl text-xs font-mono glass-card hover:border-rose-500/40 text-rose-400 transition {% if not profile.avatar_url %}hidden{% endif %}" title="Remove photo">
+                        <i class="fa-regular fa-trash-can text-xs"></i>
                     </button>
                 </div>
             </div>
@@ -527,6 +540,55 @@
                         <span>Launch Demo</span>
                         <i class="fa-solid fa-external-link text-xs"></i>
                     </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Full-Screen Profile Photo Lightbox Modal -->
+        <div id="avatarLightboxModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 sm:p-6 animate-in fade-in duration-200">
+            <!-- Dark Blur Backdrop -->
+            <div id="lightboxBackdrop" class="fixed inset-0 bg-black/90 backdrop-blur-2xl transition-opacity"></div>
+
+            <!-- Lightbox Main Frame -->
+            <div class="relative z-10 max-w-xl w-full glass-panel rounded-3xl p-5 sm:p-7 border border-cyan-500/40 shadow-2xl shadow-cyan-500/20 flex flex-col items-center">
+                <!-- Top Bar -->
+                <div class="w-full flex items-center justify-between pb-4 mb-4 border-b border-white/10">
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-lg bg-cyan-500/20 border border-cyan-500/30 flex items-center justify-center text-cyan-400 font-bold text-xs">
+                            MSA
+                        </div>
+                        <div>
+                            <h4 class="text-sm font-bold text-white leading-none">MD SHAMOON ASHRAF</h4>
+                            <span class="text-[11px] font-mono text-cyan-400">Profile Picture Preview</span>
+                        </div>
+                    </div>
+                    <!-- Close X Button -->
+                    <button type="button" id="closeLightboxBtn" class="w-9 h-9 rounded-xl glass-card flex items-center justify-center text-gray-400 hover:text-white hover:border-cyan-500/50 transition">
+                        <i class="fa-solid fa-xmark text-lg"></i>
+                    </button>
+                </div>
+
+                <!-- Fullscreen Image Display Frame -->
+                <div class="relative w-full rounded-2xl overflow-hidden bg-slate-950/80 border border-white/10 flex items-center justify-center p-2 mb-5">
+                    <img id="fullAvatarImage" src="{{ profile.avatar_url or '' }}" alt="MD SHAMOON ASHRAF" class="w-full max-h-[65vh] object-contain rounded-xl shadow-2xl transition-transform duration-300">
+                </div>
+
+                <!-- Actions Bar -->
+                <div class="w-full flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-white/10">
+                    <div class="flex items-center gap-2">
+                        <a id="downloadAvatarBtn" href="{{ profile.avatar_url or '#' }}" download="MD_SHAMOON_ASHRAF_Profile.jpg" class="px-4 py-2 rounded-xl text-xs font-mono glass-card hover:border-cyan-500/50 text-cyan-300 flex items-center gap-2 transition">
+                            <i class="fa-solid fa-download"></i>
+                            <span>Download</span>
+                        </a>
+                        <button type="button" id="changePhotoFromModalBtn" class="px-4 py-2 rounded-xl text-xs font-mono glass-card hover:border-cyan-500/50 text-gray-300 hover:text-white flex items-center gap-2 transition">
+                            <i class="fa-solid fa-camera text-cyan-400"></i>
+                            <span>Change Photo</span>
+                        </button>
+                    </div>
+
+                    <button type="button" id="closeLightboxTextBtn" class="px-4 py-2 rounded-xl text-xs font-mono bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-300 transition">
+                        Close
+                    </button>
                 </div>
             </div>
         </div>

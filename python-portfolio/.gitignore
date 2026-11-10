@@ -1,0 +1,27 @@
+# Virtual Environment
+venv/
+python-portfolio/venv/
+env/
+.env
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyc
+
+# Operating System files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+.DS_Store
+
+# Uploaded user media
+static/uploads/*
+!static/uploads/.gitkeep
+python-portfolio/static/uploads/*
+!python-portfolio/static/uploads/.gitkeep
+
+# Temporary logs
+*.log

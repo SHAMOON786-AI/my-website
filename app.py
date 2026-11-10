@@ -1,7 +1,7 @@
 import os
 import time
 from werkzeug.utils import secure_filename
-from flask import Flask, render_template, request, jsonify, url_for
+from flask import Flask, render_template, request, jsonify, url_for, send_from_directory
 
 app = Flask(__name__)
 
@@ -129,6 +129,14 @@ def home():
         "avatar_url": get_avatar_url()
     }
     return render_template('index.html', profile=profile, projects=PROJECTS, skills=SKILLS)
+
+@app.route('/robots.txt')
+def robots():
+    return send_from_directory(app.root_path, 'robots.txt')
+
+@app.route('/sitemap.xml')
+def sitemap():
+    return send_from_directory(app.root_path, 'sitemap.xml', mimetype='application/xml')
 
 @app.route('/api/upload-avatar', methods=['POST'])
 def upload_avatar():

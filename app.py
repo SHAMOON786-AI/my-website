@@ -119,7 +119,7 @@ SKILLS = {
 @app.route('/')
 def home():
     profile = {
-        "name": "Shamoon Ashraf",
+        "name": "MD SHAMOON ASHRAF",
         "tagline": "Computer Science Student & Full-Stack Python Developer",
         "institution": "Vellore Institute of Technology (VIT)",
         "email": "shamoonashraf.md2026@vitstudent.ac.in",
@@ -211,7 +211,7 @@ def contact():
 
     return jsonify({
         "success": True,
-        "message": f"Thank you, {name}! Your message has been received. Shamoon will get back to you shortly."
+        "message": f"Thank you, {name}! Your message has been received. MD Shamoon Ashraf will get back to you shortly."
     }), 200
 
 if __name__ == '__main__':

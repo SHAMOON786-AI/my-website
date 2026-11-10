@@ -37,7 +37,7 @@
     </script>
 
     <!-- Favicon -->
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='25' fill='%2306b6d4'/><text y='65' x='50' text-anchor='middle' font-size='50' font-family='sans-serif' font-weight='bold' fill='white'>SA</text></svg>">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='25' fill='%2306b6d4'/><text y='65' x='50' text-anchor='middle' font-size='40' font-family='sans-serif' font-weight='bold' fill='white'>MSA</text></svg>">
 
     <!-- FontAwesome & Devicon Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -61,8 +61,8 @@
         <nav class="max-w-7xl mx-auto glass-panel rounded-2xl px-6 py-3.5 flex items-center justify-between shadow-lg shadow-black/30">
             <!-- Brand Logo -->
             <a href="#" class="flex items-center gap-3 group">
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-500 via-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold text-lg shadow-md shadow-cyan-500/25 group-hover:scale-105 transition-transform">
-                    SA
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-500 via-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold text-sm tracking-tighter shadow-md shadow-cyan-500/25 group-hover:scale-105 transition-transform">
+                    MSA
                 </div>
                 <div class="flex flex-col">
                     <span class="font-bold text-base tracking-wide text-white group-hover:text-cyan-400 transition-colors">{{ profile.name }}</span>
@@ -137,8 +137,8 @@
                         <img id="avatarImage" src="{{ profile.avatar_url or '' }}" alt="{{ profile.name }}" class="w-full h-full object-cover {% if not profile.avatar_url %}hidden{% endif %}">
                         
                         <!-- Initial Fallback Placeholder -->
-                        <div id="avatarPlaceholder" class="w-full h-full flex flex-col items-center justify-center bg-gradient-to-tr from-cyan-950 via-slate-900 to-indigo-950 text-cyan-300 font-extrabold text-3xl {% if profile.avatar_url %}hidden{% endif %}">
-                            <span>SA</span>
+                        <div id="avatarPlaceholder" class="w-full h-full flex flex-col items-center justify-center bg-gradient-to-tr from-cyan-950 via-slate-900 to-indigo-950 text-cyan-300 font-extrabold text-2xl tracking-tight {% if profile.avatar_url %}hidden{% endif %}">
+                            <span>MSA</span>
                         </div>
 
                         <!-- Hover Camera Overlay -->
@@ -639,8 +639,8 @@
     <footer class="border-t border-white/5 py-12 relative z-10 px-4 sm:px-8 bg-slate-950/80">
         <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-6">
             <div class="flex items-center gap-3">
-                <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-cyan-500 to-blue-600 flex items-center justify-center text-white font-bold text-sm">
-                    SA
+                <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-cyan-500 to-blue-600 flex items-center justify-center text-white font-bold text-xs tracking-tight">
+                    MSA
                 </div>
                 <span class="text-sm font-semibold text-gray-300">{{ profile.name }} &copy; 2026. All rights reserved.</span>
             </div>
